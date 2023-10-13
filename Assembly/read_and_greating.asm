@@ -34,12 +34,14 @@ _start:
 
     ;; print until null-terminated
     xor rcx, rcx
-    count_until_asterix:
-        cmp byte [greating+rcx], 0x2a
-        je end_loop_count_until_asterix
-        inc rcx
-        jmp count_until_asterix
-    end_loop_count_until_asterix:
+
+start_loop_count_until_asterix:
+    cmp byte [greating+rcx], 0x2a
+    je end_loop_count_until_asterix
+    inc rcx
+    jmp start_loop_count_until_asterix
+
+end_loop_count_until_asterix:
     lea rdi, byte [greating+rcx+1]
     mov rsi, 0x00
     call print_until
@@ -51,12 +53,14 @@ _start:
 
 count_char:
     xor rcx, rcx
-    start_loop_counter:
-        cmp byte [rdi+rcx], 0x00
-        je end_loop_counter
-        inc rcx
-        jmp start_loop_counter
-    end_loop_counter:
+
+start_loop_counter:
+    cmp byte [rdi+rcx], 0x00
+    je end_loop_counter
+    inc rcx
+    jmp start_loop_counter
+
+end_loop_counter:
     mov rax, rcx
     ret
 
@@ -75,6 +79,7 @@ read_input:
     xor rdi, rdi
     xor rax, rax
     syscall
+
     ;; remove the newline at the end of input
     mov rdi, rsi
     call count_char
@@ -84,14 +89,16 @@ read_input:
 ;; print until especified char or null-terminated
 print_until:
     xor rcx, rcx
-    start_loop_print_until:
-        mov al, byte [rdi+rcx]
-        cmp al, sil
-        je end_loop_print_until
-        mov byte[tmp+rcx], al
-        inc rcx
-        jmp start_loop_print_until
-    end_loop_print_until:
+
+start_loop_print_until:
+    mov al, byte [rdi+rcx]
+    cmp al, sil
+    je end_loop_print_until
+    mov byte[tmp+rcx], al
+    inc rcx
+    jmp start_loop_print_until
+
+end_loop_print_until:
     mov rdi, tmp
     call print_str
     ret
